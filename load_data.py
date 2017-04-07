@@ -6,6 +6,11 @@ import cv2
 
 
 def load_image(filename):
+    """
+    load an image into a caffe-compatible numpy.ndarray
+    :param filename: filename of the image
+    :return: image
+    """
     im = cv2.imread(filename)
     im = cv2.resize(im, (227, 227))
     #       BGR => RGB & H x W x C => C x H x W
@@ -14,8 +19,14 @@ def load_image(filename):
     return im
 
 
-def load_data(filename):
+def parse_roi_xml(filename):
+    """
+    Parses a Kaggle flavoured XML definition
+    :param filename: filename of the definition
+    :return: image_folder, image_filename, bound_boxes
+    """
     root = ETree.parse(filename)
+    image_folder = root.find('folder').text
     image_filename = root.find('filename/item').text
     bound_boxes = []
     for obj in root.iter('object'):
@@ -25,4 +36,4 @@ def load_data(filename):
                 value = int(item.text)
                 bbox.append(value)
         bound_boxes.append(bbox)
-    return load_image(image_filename), bound_boxes
+    return image_folder, image_filename, bound_boxes
