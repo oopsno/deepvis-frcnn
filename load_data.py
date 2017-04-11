@@ -29,8 +29,8 @@ def parse_roi_xml(filename):
     image_folder = root.find('folder').text
     image_filename = root.find('filename/item').text
     bound_boxes = []
-    for obj in root.iter('object'):
-        bbox = []
+    for i, obj in enumerate(root.iter('object')):
+        bbox = [i]
         for item in obj.find('bndbox').iter():
             if item.tag != 'bndbox':
                 value = int(item.text)
